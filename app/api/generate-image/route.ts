@@ -62,6 +62,21 @@ function parseConfigFromQuery(queryConfig: string): OGImageConfig {
       config.grid.type = parsedConfig.g;
     }
     
+    // Handle grid opacity
+    if (parsedConfig.o !== undefined) {
+      config.grid.opacity = parsedConfig.o;
+    }
+    
+    // Handle grid size
+    if (parsedConfig.s !== undefined) {
+      config.grid.size = parsedConfig.s;
+    }
+    
+    // Handle grid spacing
+    if (parsedConfig.sp !== undefined) {
+      config.grid.spacing = parsedConfig.sp;
+    }
+    
     // Handle dimensions
     if (parsedConfig.w) config.width = parsedConfig.w;
     if (parsedConfig.h) config.height = parsedConfig.h;
@@ -134,7 +149,10 @@ async function generateImage(config: OGImageConfig) {
   } else if (config.grid.type === 'dots') {
     // Draw dots in a grid pattern
     ctx.fillStyle = config.grid.color
-    ctx.globalAlpha = config.grid.opacity / 100
+    
+    // Use the full opacity value instead of dividing by 100
+    // This makes the dots more visible like in the CSS version
+    ctx.globalAlpha = Math.min(1, config.grid.opacity / 70)
     
     for (let y = config.grid.spacing; y <= config.height; y += config.grid.spacing * 2) {
       for (let x = config.grid.spacing; x <= config.width; x += config.grid.spacing * 2) {
