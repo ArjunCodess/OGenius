@@ -1,12 +1,15 @@
 'use client'
 
 import { useRef } from 'react'
-import { useEditor } from '@/context/editor-context'
+import { OGImageConfig } from '@/types/image-types'
 import { generateGradientBackground } from '@/lib/gradient-utils'
 import { generateGridPattern, getGridBackgroundSize } from '@/lib/grid-utils'
 
-export function ImagePreview() {
-  const { config } = useEditor()
+interface ImagePreviewProps {
+  config: OGImageConfig
+}
+
+export function ImagePreview({ config }: ImagePreviewProps) {
   const containerRef = useRef<HTMLDivElement>(null)
 
   // Style for the preview container based on the current config
@@ -22,12 +25,10 @@ export function ImagePreview() {
   // Style for the grid pattern overlay
   const gridStyle = {
     position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
+    inset: 0,
     backgroundImage: generateGridPattern(config.grid),
     backgroundSize: getGridBackgroundSize(config.grid),
+    opacity: config.grid.opacity / 100, // Set opacity based on configuration
     pointerEvents: 'none',
   } as React.CSSProperties
 
@@ -35,10 +36,10 @@ export function ImagePreview() {
     <div ref={containerRef} className="w-full overflow-hidden rounded-md border">
       <div style={previewStyle} className="mx-auto">
         {/* Grid overlay */}
-        <div style={gridStyle} />
+        {config.grid.type !== 'none' && <div style={gridStyle} />}
         
         {/* Text elements */}
-        {config.text.map((textItem, index) => (
+        {config.text?.map((textItem, index) => (
           <div
             key={index}
             style={{
@@ -49,7 +50,7 @@ export function ImagePreview() {
               fontFamily: textItem.fontFamily,
               fontSize: `${textItem.fontSize}px`,
               fontWeight: textItem.fontWeight,
-              textAlign: textItem.alignment,
+              textAlign: textItem.alignment as 'left' | 'center' | 'right',
               transform: 'translate(-50%, -50%)',
             }}
           >
@@ -58,7 +59,7 @@ export function ImagePreview() {
         ))}
         
         {/* Image elements */}
-        {config.images.map((imageItem, index) => (
+        {config.images?.map((imageItem, index) => (
           <div
             key={index}
             style={{

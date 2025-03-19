@@ -1,61 +1,57 @@
-import { GridSettings } from '@/types/image-types'
+import { GridSettings, GridType } from '@/types/image-types'
 
 /**
  * Generate CSS for grid pattern
  */
-export function generateGridPattern(settings: GridSettings): string {
-  const { type, color, opacity, size, spacing } = settings
-  
-  // Convert opacity from 0-100 to 0-1
-  const opacityValue = opacity / 100
-  const rgbaColor = convertToRgba(color, opacityValue)
-  
-  switch (type) {
+export function generateGridPattern(grid: GridSettings): string {
+  if (grid.type === 'none') {
+    return 'none';
+  }
+
+  // We'll apply opacity in the CSS styles instead of in the color
+  // to get more visible dots/grid/lines
+  const rgbaColor = grid.color
+
+  switch (grid.type) {
     case 'lines':
-      return `repeating-linear-gradient(0deg, transparent, transparent ${spacing - 1}px, ${rgbaColor} ${spacing - 1}px, ${rgbaColor} ${spacing}px)`
+      return `linear-gradient(to bottom, ${rgbaColor} 1px, transparent 1px)`
     case 'grid':
-      return `linear-gradient(0deg, transparent, transparent ${spacing - 1}px, ${rgbaColor} ${spacing - 1}px, ${rgbaColor} ${spacing}px),
-              linear-gradient(90deg, transparent, transparent ${spacing - 1}px, ${rgbaColor} ${spacing - 1}px, ${rgbaColor} ${spacing}px)`
+      return `linear-gradient(to right, ${rgbaColor} 1px, transparent 1px),
+              linear-gradient(to bottom, ${rgbaColor} 1px, transparent 1px)`
     case 'dots':
-      return `radial-gradient(circle ${size}px at ${spacing}px ${spacing}px, ${rgbaColor} 99%, transparent 100%)`
-    case 'none':
+      // Improved dots pattern with better visibility
+      return `radial-gradient(circle ${grid.size}px, ${rgbaColor} 0%, ${rgbaColor} 60%, transparent 60%)`
     default:
       return 'none'
   }
 }
 
 /**
- * Convert hex color to rgba for opacity support
- */
-export function convertToRgba(hexColor: string, opacity: number): string {
-  // Remove # if present
-  const hex = hexColor.replace('#', '')
-  
-  // Convert hex to RGB
-  const r = parseInt(hex.substring(0, 2), 16)
-  const g = parseInt(hex.substring(2, 4), 16)
-  const b = parseInt(hex.substring(4, 6), 16)
-  
-  // Return rgba value
-  return `rgba(${r}, ${g}, ${b}, ${opacity})`
-}
-
-/**
  * Generate CSS for background-size property based on grid type
  */
-export function getGridBackgroundSize(settings: GridSettings): string {
-  const { type, spacing } = settings
-  
-  switch (type) {
+export function getGridBackgroundSize(grid: GridSettings): string {
+  switch (grid.type) {
     case 'dots':
-      return `${spacing * 2}px ${spacing * 2}px`
+      return `${grid.spacing * 2}px ${grid.spacing * 2}px`
     case 'grid':
+      return `${grid.spacing}px ${grid.spacing}px`
     case 'lines':
-      return '100% 100%'
+      return `100% ${grid.spacing}px`
     case 'none':
     default:
       return 'auto'
   }
+}
+
+/**
+ * Convert HEX color to RGBA with opacity
+ */
+function convertHexToRgba(hex: string, alpha: number): string {
+  const r = parseInt(hex.slice(1, 3), 16)
+  const g = parseInt(hex.slice(3, 5), 16)
+  const b = parseInt(hex.slice(5, 7), 16)
+  
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`
 }
 
 /**
@@ -73,22 +69,22 @@ export function getGridPresets(): GridSettings[] {
     {
       type: 'lines',
       color: '#000000',
-      opacity: 20,
+      opacity: 50,
       size: 1,
       spacing: 20
     },
     {
       type: 'grid',
       color: '#000000',
-      opacity: 20,
+      opacity: 50,
       size: 1,
       spacing: 20
     },
     {
       type: 'dots',
       color: '#000000',
-      opacity: 40,
-      size: 3,
+      opacity: 70,
+      size: 2,
       spacing: 20
     }
   ]

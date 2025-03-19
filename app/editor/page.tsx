@@ -1,6 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { ImageBuilder } from "@/components/editor/image-builder/image-builder"
+import { MetadataTab } from "@/components/editor/metadata-tab"
 
 export default function EditorPage() {
   return (
@@ -23,22 +23,10 @@ export default function EditorPage() {
           </TabsContent>
           
           <TabsContent value="metadata" className="w-full">
-            <Card>
-              <CardHeader>
-                <CardTitle>Metadata Editor</CardTitle>
-                <CardDescription>
-                  Generate and customize meta tags for your image.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground">
-                  Metadata editor will be implemented in Phase 2.
-                </p>
-              </CardContent>
-            </Card>
+            <MetadataTab />
           </TabsContent>
         </div>
       </Tabs>
     </div>
   )
-} 
+}
