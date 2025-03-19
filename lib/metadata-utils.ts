@@ -106,6 +106,9 @@ export function getImageUrlFromConfig(config: OGImageConfig): string {
       config.background.colors.map(c => c.color.replace('#', '')).join('-') : 
       config.background.colors[0].color.replace('#', ''),
     g: config.grid.type,
+    o: config.grid.opacity,
+    s: config.grid.size,
+    sp: config.grid.spacing,
     w: config.width,
     h: config.height
   }
