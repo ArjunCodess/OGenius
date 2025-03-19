@@ -61,28 +61,28 @@ export function getGridPresets(): GridSettings[] {
   return [
     {
       type: 'none',
-      color: '#000000',
+      color: '#FFFFFF',
       opacity: 0,
       size: 1,
       spacing: 20
     },
     {
       type: 'lines',
-      color: '#000000',
+      color: '#FFFFFF',
       opacity: 50,
       size: 1,
       spacing: 20
     },
     {
       type: 'grid',
-      color: '#000000',
+      color: '#FFFFFF',
       opacity: 50,
       size: 1,
       spacing: 20
     },
     {
       type: 'dots',
-      color: '#000000',
+      color: '#FFFFFF',
       opacity: 70,
       size: 2,
       spacing: 20
