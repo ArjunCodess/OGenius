@@ -1,40 +1,35 @@
 "use client";
 
-import { useEditor } from "@/context/editor-context";
-import { getGradientPresets } from "@/lib/gradient-utils";
-import { generateGradientBackground } from "@/lib/gradient-utils";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
+import { Button } from '@/components/ui/button'
+import { gradientPresets } from '@/lib/gradient-utils'
 
-export function GradientPresets() {
-  const { config, updateBackground } = useEditor();
-  const presets = getGradientPresets();
+interface GradientPresetsProps {
+  onSelect: (colors: string[]) => void
+}
 
+export function GradientPresets({ onSelect }: GradientPresetsProps) {
   return (
     <div className="space-y-3">
-      <Label className="text-sm font-medium">Gradient Presets</Label>
-      <div className="grid grid-cols-5 gap-2 mt-4">
-        {presets.map((preset, index) => {
-          const isActive =
-            config.background.type === preset.type &&
-            JSON.stringify(config.background.colors) ===
-              JSON.stringify(preset.colors);
-
+      <h3 className="text-sm font-medium">Background Presets</h3>
+      <div className="grid grid-cols-4 gap-2">
+        {gradientPresets.map((colors, index) => {
+          const gradient = `linear-gradient(to right, ${colors.join(', ')})`
+          
           return (
             <Button
               key={index}
-              className={`h-16 rounded-md border transition-all mb-2 hover:shadow-md ${
-                isActive
-                  ? "ring-2 ring-primary ring-offset-2"
-                  : "hover:scale-105"
-              }`}
-              style={{ background: generateGradientBackground(preset) }}
-              onClick={() => updateBackground(preset)}
-              aria-label={`Gradient preset ${index + 1}`}
-            />
-          );
+              variant="outline"
+              className="h-20 p-0 overflow-hidden"
+              onClick={() => onSelect(colors)}
+            >
+              <div
+                className="w-full h-full"
+                style={{ background: gradient }}
+              />
+            </Button>
+          )
         })}
       </div>
     </div>
-  );
+  )
 }

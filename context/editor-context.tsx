@@ -1,128 +1,83 @@
 'use client'
 
-import { createContext, useContext, useState, ReactNode } from 'react'
-import { OGImageConfig, GradientSettings, GridSettings, TextSettings, ImageSettings } from '@/types/image-types'
-import { getGradientPresets } from '@/lib/gradient-utils'
-import { getGridPresets } from '@/lib/grid-utils'
+import React, { createContext, useContext, useState, ReactNode } from 'react'
+import { OGImageConfig } from '@/types/image-types'
 
-// Default OG Image dimensions
-const DEFAULT_WIDTH = 1200
-const DEFAULT_HEIGHT = 630
-
-// Default configuration
+// Default placeholder config
 const defaultConfig: OGImageConfig = {
-  width: DEFAULT_WIDTH,
-  height: DEFAULT_HEIGHT,
-  background: getGradientPresets()[0],
-  grid: getGridPresets()[0],
+  width: 1200,
+  height: 630,
+  background: {
+    type: 'linear',
+    direction: 'to right',
+    colors: [
+      { color: '#4F46E5', position: 0 },
+      { color: '#7C3AED', position: 100 }
+    ]
+  },
+  grid: {
+    type: 'grid',
+    color: '#FFFFFF',
+    opacity: 10,
+    size: 40,
+    spacing: 10
+  },
   text: [],
-  images: [],
+  images: []
 }
 
-interface EditorContextType {
+interface EditorContextProps {
   config: OGImageConfig
-  setConfig: (config: OGImageConfig) => void
-  updateBackground: (background: GradientSettings) => void
-  updateGrid: (grid: GridSettings) => void
-  addText: (text: TextSettings) => void
-  updateText: (index: number, text: TextSettings) => void
-  removeText: (index: number) => void
-  addImage: (image: ImageSettings) => void
-  updateImage: (index: number, image: ImageSettings) => void
-  removeImage: (index: number) => void
-  resetConfig: () => void
+  updateConfig: (config: OGImageConfig) => void
+  updateBackground: (background: OGImageConfig['background']) => void
+  updateGrid: (grid: OGImageConfig['grid']) => void
 }
 
-const EditorContext = createContext<EditorContextType | undefined>(undefined)
+const EditorContext = createContext<EditorContextProps | undefined>(undefined)
 
-export function EditorProvider({ children }: { children: ReactNode }) {
+export function useEditor() {
+  const context = useContext(EditorContext)
+  if (context === undefined) {
+    throw new Error('useEditor must be used within an EditorProvider')
+  }
+  return context
+}
+
+interface EditorProviderProps {
+  children: ReactNode
+}
+
+export function EditorProvider({ children }: EditorProviderProps) {
   const [config, setConfig] = useState<OGImageConfig>(defaultConfig)
 
-  const updateBackground = (background: GradientSettings) => {
-    setConfig((prev) => ({ ...prev, background }))
+  const updateConfig = (newConfig: OGImageConfig) => {
+    setConfig(newConfig)
   }
 
-  const updateGrid = (grid: GridSettings) => {
-    setConfig((prev) => ({ ...prev, grid }))
-  }
-
-  const addText = (text: TextSettings) => {
-    setConfig((prev) => ({
+  const updateBackground = (background: OGImageConfig['background']) => {
+    setConfig(prev => ({
       ...prev,
-      text: [...prev.text, text],
+      background
     }))
   }
 
-  const updateText = (index: number, text: TextSettings) => {
-    setConfig((prev) => {
-      const newText = [...prev.text]
-      newText[index] = text
-      return { ...prev, text: newText }
-    })
-  }
-
-  const removeText = (index: number) => {
-    setConfig((prev) => {
-      const newText = [...prev.text]
-      newText.splice(index, 1)
-      return { ...prev, text: newText }
-    })
-  }
-
-  const addImage = (image: ImageSettings) => {
-    setConfig((prev) => ({
+  const updateGrid = (grid: OGImageConfig['grid']) => {
+    setConfig(prev => ({
       ...prev,
-      images: [...prev.images, image],
+      grid
     }))
-  }
-
-  const updateImage = (index: number, image: ImageSettings) => {
-    setConfig((prev) => {
-      const newImages = [...prev.images]
-      newImages[index] = image
-      return { ...prev, images: newImages }
-    })
-  }
-
-  const removeImage = (index: number) => {
-    setConfig((prev) => {
-      const newImages = [...prev.images]
-      newImages.splice(index, 1)
-      return { ...prev, images: newImages }
-    })
-  }
-
-  const resetConfig = () => {
-    setConfig(defaultConfig)
   }
 
   return (
     <EditorContext.Provider
       value={{
         config,
-        setConfig,
+        updateConfig,
         updateBackground,
-        updateGrid,
-        addText,
-        updateText,
-        removeText,
-        addImage,
-        updateImage,
-        removeImage,
-        resetConfig,
+        updateGrid
       }}
     >
       {children}
     </EditorContext.Provider>
   )
-}
-
-export function useEditor() {
-  const context = useContext(EditorContext)
-  
-  if (context === undefined) {
-    throw new Error('useEditor must be used within an EditorProvider')
-  }
-  
-  return context
 } 
