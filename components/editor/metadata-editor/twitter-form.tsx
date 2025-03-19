@@ -32,7 +32,7 @@ export default function TwitterForm({ twitter, onChange }: TwitterFormProps) {
         <Label htmlFor="card">Card Type</Label>
         <Select
           value={twitter.card}
-          onValueChange={(value) => handleCardChange(value as any)}
+          onValueChange={(value) => handleCardChange(value as 'summary' | 'summary_large_image' | 'app' | 'player')}
         >
           <SelectTrigger>
             <SelectValue placeholder="Select a card type" />

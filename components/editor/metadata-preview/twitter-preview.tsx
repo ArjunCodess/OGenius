@@ -1,7 +1,7 @@
 import React from 'react'
 import { TwitterMetadata } from '@/types/metadata-types'
 import Image from 'next/image'
-import { Play, ExternalLink, Star } from 'lucide-react'
+import { Play, Star } from 'lucide-react'
 
 interface TwitterPreviewProps {
   metadata: TwitterMetadata

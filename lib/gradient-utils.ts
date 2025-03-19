@@ -106,35 +106,6 @@ export function getGradientPresets(): GradientSettings[] {
       ],
     },
     
-    // Radial gradients
-    {
-      type: 'radial',
-      colors: [
-        { color: '#fbbf24', position: 0 },
-        { color: '#ef4444', position: 100 }
-      ],
-    },
-    
-    // Conic gradients
-    {
-      type: 'conic',
-      colors: [
-        { color: '#ec4899', position: 0 },
-        { color: '#8b5cf6', position: 33 },
-        { color: '#3b82f6', position: 66 },
-        { color: '#ec4899', position: 100 }
-      ],
-    },
-    {
-      type: 'conic',
-      colors: [
-        { color: '#22c55e', position: 0 },
-        { color: '#84cc16', position: 33 },
-        { color: '#eab308', position: 66 },
-        { color: '#22c55e', position: 100 }
-      ],
-    },
-    
     // Solid colors
     {
       type: 'solid',

@@ -1,7 +1,6 @@
 'use client'
 
 import { getGridPresets } from '@/lib/grid-utils'
-import { generateGridPattern, getGridBackgroundSize } from '@/lib/grid-utils'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Label } from '@/components/ui/label'
 import { GridSettings, GridType } from '@/types/image-types'
